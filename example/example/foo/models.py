@@ -43,3 +43,12 @@ class FooItem(models.Model):
         """
         kwargs = {'slug': self.slug}
         return reverse('foo.detail', kwargs=kwargs)
+
+    @property
+    def image_url(self):
+        """
+        Shortcut to full image URL for XML images sitemap.
+
+        :return str:
+        """
+        return self.image.url if self.image else ''

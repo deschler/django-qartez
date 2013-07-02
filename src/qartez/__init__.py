@@ -58,7 +58,16 @@ class ImagesSitemap(GenericSitemap):
         Gets image location.
         """
         if self.image_location_field is not None:
-            return getattr(item, self.image_location_field)
+            try:
+                image_location_field = getattr(item, self.image_location_field)
+
+                if callable(image_location_field):
+                    return image_location_field()
+                else:
+                    return image_location_field
+            except Exception, e:
+                return None
+
         return None
 
     def image_caption(self, item):

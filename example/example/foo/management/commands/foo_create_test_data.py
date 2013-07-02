@@ -3,11 +3,10 @@ import random
 
 import radar
 
-from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from foo.models import FooItem, FooCategory
+from foo.models import FooItem
 
 FACTORY = """
     Sed dictum in tellus non iaculis. Aenean ac interdum ipsum. Etiam tempor quis ante vel rhoncus. Nulla
@@ -92,43 +91,62 @@ split_sentences = lambda f: f.split('?')
 
 WORDS = split_words(FACTORY)
 SENTENCES = split_sentences(FACTORY)
+IMAGE_FACTORY = (
+    'foo-images/2010-1-19-17-2-38.jpg',
+    'foo-images/2010-5-31-15-11-2.jpg',
+    'foo-images/2010-5-31-15-14-32.jpg',
+    'foo-images/2010-5-4-14-47-56.jpg',
+    'foo-images/2011-2-11-19-42-22.jpg',
+    'foo-images/2011-2-11-19-45-23.jpg',
+    'foo-images/2011-2-11-19-46-21.jpg',
+    'foo-images/2011-2-11-19-58-50.jpg',
+    'foo-images/2011-2-11-20-6-19.jpg',
+    'foo-images/2011-7-18-13-37-50.jpg',
+    'foo-images/2011-7-21-11-51-1.jpg',
+    'foo-images/2011-7-21-15-40-19.jpg',
+    'foo-images/2012-10-2-15-15-24.jpg',
+    'foo-images/2012-11-15-15-24-54.jpg',
+    'foo-images/2012-11-22-12-15-22.jpg',
+    'foo-images/2012-11-26-13-50-20.jpg',
+    'foo-images/2012-12-1-8-33-29.jpg',
+    'foo-images/2012-5-24-7-43-56.jpg',
+    'foo-images/2012-9-29-11-52-30.jpg',
+    'foo-images/2013-2-19-4-53-17.jpg'
+)
+
+NUM_ITEMS = 50
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         words = WORDS
-        for index in xrange(20):
-            c = FooCategory()
-            random_name = words[random.randint(0, len(words) - 1)]
-            c.name = unicode(random_name).capitalize()
-            c.slug = slugify(c.name)
-            try:
-                c.save()
-                words.remove(random_name)
-            except Exception, e:
-                pass
+        images = IMAGE_FACTORY
+        url_parts = range(0, NUM_ITEMS)
 
-        categories = FooCategory.objects.all()[:]
-        users = User.objects.all()[:]
-
-        words = WORDS
-        for index in xrange(100):
+        for index in xrange(NUM_ITEMS):
             i = FooItem()
             random_name = words[random.randint(0, len(words) - 1)]
+            random_image = images[random.randint(0, len(images) - 1)]
             i.title = unicode(random_name).capitalize()
             i.slug = slugify(i.title)
             i.body = unicode(SENTENCES[random.randint(0, len(SENTENCES) - 1)])
             i.date_published = radar.random_datetime()
-            i.category = categories[random.randint(0, len(categories) - 1)]
-            i.editor = users[random.randint(0, len(users) - 1)]
+            i.image = random_image
+            i.alternative_url = 'http://example.com/%s/' % url_parts.pop(0)
 
             try:
                 i.save()
                 words.remove(random_name)
+                images.remove(random_image)
 
-                for index in xrange(random.randint(1, 4)):
-                    for z in xrange(0, index):
-                        i.categories.add(categories[random.randint(0, len(categories) - 1)])
-                        i.authors.add(users[random.randint(0, len(users) - 1)])
+                if 0 == len(images):
+                    images = IMAGE_FACTORY
+
+                if 0 == len(words):
+                    words = WORDS
+
+                if 0 == len(url_parts):
+                    url_parts = random.randrange(0, NUM_ITEMS)
+
             except Exception, e:
                 print e
                 pass

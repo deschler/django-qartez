@@ -8,7 +8,7 @@ from foo.models import FooItem
 
 foo_item_images_info_dict = {
     'queryset': FooItem._default_manager.exclude(image=None), # Queryset
-    'image_location_field': 'image', # Image location
+    'image_location_field': 'image_url', # Image location
     'image_title_field': 'title', # Image title
     'location_field': 'get_absolute_url' # An absolute URL of the page where image is shown
 }
