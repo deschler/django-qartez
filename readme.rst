@@ -26,7 +26,7 @@ Latest stable version from source:
 2. Add 'qartez' to your ``INSTALLED_APPS``
 ----------------------------------------------
     >>> INSTALLED_APPS = (
-    >>> # ...
+    >>> 'django.contrib.sitemaps',
     >>> 'qartez',
     >>> # ...
     >>> )
@@ -45,13 +45,15 @@ foo/sitemap.py
 >>>
 >>> from foo.models import FooItem
 >>>
+>>> # Dictionary to feed to the images sitemap
 >>> foo_item_images_info_dict = {
->>>     'queryset': FooItem._default_manager.exclude(image=None), # Queryset
+>>>     'queryset': FooItem._default_manager.exclude(image=None), # Base queryset
 >>>     'image_location_field': 'image', # Image location
 >>>     'image_title_field': 'title', # Image title
 >>>     'location_field': 'get_absolute_url' # An absolute URL of the page where image is shown
 >>> }
 >>>
+>>> # Images sitemap
 >>> foo_item_images_sitemap = {
 >>>     'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
 >>> }
