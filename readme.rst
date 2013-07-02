@@ -6,7 +6,8 @@ This app aims to provide better XML sitemaps. At the moment the following XML si
 - qartez.SimpleSitemap: Sitemap for service pages. Add named patterns or URLs to the sitemap to have it
   nicely displayed in a separate service XML sitemap.
 - qartez.RelAlternateHreflangSitemap: Sitemaps: rel="alternate" hreflang="x" implementation. Read the specs
-  the specs here http://support.google.com/webmasters/bin/answer.py?hl=en&answer=2620865
+  the specs here
+  http://support.google.com/webmasters/bin/answer.py?hl=en&answer=2620865
 
 Installation
 ==============================================
@@ -27,11 +28,6 @@ Latest stable version from source:
     >>> 'qartez',
     >>> # ...
     >>> )
-
-3. Copy templates
-----------------------------------------------
-Copy the file `qartez/templates/qartez/sitemap_rename_and_place_in_global_templates.xml` to your global
-templates directory and rename it to just `sitemap.xml`.
 
 Usage and examples
 ==============================================
