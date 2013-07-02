@@ -131,7 +131,7 @@ class Command(BaseCommand):
             i.body = unicode(SENTENCES[random.randint(0, len(SENTENCES) - 1)])
             i.date_published = radar.random_datetime()
             i.image = random_image
-            i.alternative_url = 'http://example.com/%s/' % url_parts.pop(0)
+            i.alternative_url = 'http://en-us.example.com/%s/' % url_parts.pop(0)
 
             try:
                 i.save()
