@@ -22,7 +22,7 @@ Latest stable version on pypi:
 
 Latest stable version from source:
 
-    $ pip install -e hg+http://bitbucket.org/barseghyanartur/qartez@stable#egg=qartez
+    $ pip install -e hg+http://bitbucket.org/barseghyanartur/django-qartez@stable#egg=django-qartez
 
 2. Add `qartez` to your ``INSTALLED_APPS``
 ------------------------------------------------------
