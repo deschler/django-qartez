@@ -26,6 +26,7 @@ Latest stable version from source:
 2. Add 'qartez' to your ``INSTALLED_APPS``
 ----------------------------------------------
     >>> INSTALLED_APPS = (
+    >>> # ...
     >>> 'django.contrib.sitemaps',
     >>> 'qartez',
     >>> # ...
