@@ -10,6 +10,7 @@ from django.contrib.sitemaps import Sitemap, GenericSitemap
 from django.core.urlresolvers import reverse_lazy
 from django.utils.functional import lazy
 from django.contrib.sites.models import Site
+from django.core.exceptions import ImproperlyConfigured
 
 from qartez.constants import REL_ALTERNATE_HREFLANG_SITEMAP_TEMPLATE
 from qartez.settings import PREPEND_LOC_URL_WITH_SITE_URL, PREPEND_IMAGE_LOC_URL_WITH_SITE_URL
@@ -19,6 +20,20 @@ class ImagesSitemap(GenericSitemap):
     """
     Class for image sitemap. Implemented accordings to specs specifed by Google
     http://www.google.com/support/webmasters/bin/answer.py?answer=178636
+
+    :example:
+    >>> from qartez import ImagesSitemap
+    >>>
+    >>> foo_item_images_info_dict = {
+    >>>     'queryset': FooItem._default_manager.exclude(image=None), # Queryset
+    >>>     'image_location_field': 'image', # Image location
+    >>>     'image_title_field': 'title', # Image title
+    >>>     'location_field': 'get_absolute_url' # An absolute URL of the page where image is shown
+    >>> }
+    >>>
+    >>> foo_item_images_sitemap = {
+    >>>     'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
+    >>> }
     """
     def __init__(self, info_dict, priority=None, changefreq=None):
         """
@@ -40,7 +55,7 @@ class ImagesSitemap(GenericSitemap):
 
     def image_location(self, item):
         """
-        Gets our image location.
+        Gets image location.
         """
         if self.image_location_field is not None:
             return getattr(item, self.image_location_field)
@@ -48,7 +63,7 @@ class ImagesSitemap(GenericSitemap):
 
     def image_caption(self, item):
         """
-        Gets our image caption.
+        Gets image caption.
         """
         if self.image_caption_field is not None:
             return getattr(item, self.image_caption_field)
@@ -56,7 +71,7 @@ class ImagesSitemap(GenericSitemap):
 
     def image_title(self, item):
         """
-        Gets our image title.
+        Gets image title.
         """
         if self.image_title_field is not None:
             return getattr(item, self.image_title_field)
@@ -64,7 +79,7 @@ class ImagesSitemap(GenericSitemap):
 
     def image_geo_location(self, item):
         """
-        Gets our image geo location.
+        Gets image geo location.
         """
         if self.image_geo_location_field is not None:
             return getattr(item, self.image_geo_location_field)
@@ -72,23 +87,26 @@ class ImagesSitemap(GenericSitemap):
 
     def image_license(self, item):
         """
-        Gets our image geo location.
+        Gets image geo location.
         """
         if self.image_license_field is not None:
             return getattr(item, self.image_license_field)
         return None
 
-    def location(self, obj):
+    def location(self, item):
+        """
+        Gets image location URL.
+        """
         if self.location_field is not None:
             try:
-                location_field = getattr(obj, self.location_field)
+                location_field = getattr(item, self.location_field)
                 if callable(location_field):
                     return location_field()
                 else:
                     return location_field
             except Exception, e:
                 return None
-        return obj.get_absolute_url()
+        return item.get_absolute_url()
 
     def __get(self, name, obj, default=None):
         try:
@@ -99,20 +117,47 @@ class ImagesSitemap(GenericSitemap):
             return attr(obj)
         return attr
 
-    def get_urls(self, page=1):
-        current_site = Site.objects.get_current()
+    def get_urls(self, page=1, site=None, protocol=None):
+        # Determine protocol
+        if self.protocol is not None:
+            protocol = self.protocol
+        if protocol is None:
+            protocol = 'http'
+
+        # Determine domain
+        if site is None:
+            if Site._meta.installed:
+                try:
+                    site = Site.objects.get_current()
+                except Site.DoesNotExist:
+                    pass
+            if site is None:
+                raise ImproperlyConfigured("To use sitemaps, either enable the sites framework or pass a "
+                                           "Site/RequestSite object in your view.")
+        domain = site.domain
+
         urls = []
         for item in self.paginator.page(page).object_list:
             loc = self.__get('location', item, None)
             if loc and PREPEND_LOC_URL_WITH_SITE_URL:
-                loc = "http://%s%s" % (unicode(current_site.domain), unicode(loc))
+                loc = "http://%s%s" % (unicode(domain), unicode(loc))
 
             image_loc = self.__get('image_location', item, None)
             if image_loc and PREPEND_IMAGE_LOC_URL_WITH_SITE_URL:
                 try:
-                    image_loc = "http://%s%s" % (unicode(current_site.domain), unicode(image_loc))
+                    image_loc = "http://%s%s" % (unicode(domain), unicode(image_loc))
                 except Exception, e:
                     continue
+
+            # Validating the changefreq
+            changefreq = self.__get('changefreq', item, None)
+            if changefreq is not None:
+                assert changefreq in CHANGEFREQ
+
+            # Validating the priority
+            priority = self.__get('priority', item, None)
+            if priority is not None:
+                assert priority >= 0 and priority <= 1
 
             url_info = {
                 'location': loc,
@@ -122,8 +167,8 @@ class ImagesSitemap(GenericSitemap):
                 'image_license': self.__get('image_license', item, None),
                 'image_geo_location': self.__get('image_geo_location', item, None),
                 'lastmod': self.__get('lastmod', item, None),
-                'changefreq': self.__get('changefreq', item, None),
-                'priority': self.__get('priority', item, None)
+                'changefreq': changefreq,
+                'priority': priority
             }
             urls.append(url_info)
         return urls
@@ -241,11 +286,18 @@ class StaticSitemap(Sitemap):
 
 class RelAlternateHreflangSitemap(Sitemap):
     """
-    Sitemaps: rel="alternate" hreflang="x" implementation. 
+    Sitemaps: rel="alternate" hreflang="x" implementation.
     
     Read the specs the specs here http://support.google.com/webmasters/bin/answer.py?hl=en&answer=2620865
 
-    IMPORTANT: When you use this class you have to override the "alternate_hreflangs" method in your sitemap class.
+    IMPORTANT: When you use this class you have to override the ``alternate_hreflangs`` method in your sitemap class.
+
+    :example:
+    >>> from qartez import RelAlternateHreflangSitemap
+    >>>
+    >>> class ArticleSitemap(RelAlternateHreflangSitemap):
+    >>>     def alternate_hreflangs(self, obj):
+    >>>         return [('en-us', obj.alternative_object_url),]
     """
     def __get(self, name, obj, default=None):
         try:
@@ -259,13 +311,6 @@ class RelAlternateHreflangSitemap(Sitemap):
     def alternate_hreflangs(self, item):
         """
         You should override the "alternate_hreflangs" method in your sitemap class.
-
-        Example:
-            from qartez import RelAlternateHreflangSitemap
-
-            class ArticleSitemap(RelAlternateHreflangSitemap):
-                def alternate_hreflangs(self, obj):
-                    return [('en-us', obj.alternative_object_url),]
         """
         raise NotImplementedError(
             u"""You have to override the "alternate_hreflangs" method in your sitemap class. """
@@ -285,11 +330,28 @@ class RelAlternateHreflangSitemap(Sitemap):
                 output += REL_ALTERNATE_HREFLANG_SITEMAP_TEMPLATE % {'lang': hreflang[0], 'href': hreflang[1]}
         return output
 
-    def get_urls(self, page=1):
-        current_site = Site.objects.get_current()
+    def get_urls(self, page=1, site=None, protocol=None):
+        # Determine protocol
+        if self.protocol is not None:
+            protocol = self.protocol
+        if protocol is None:
+            protocol = 'http'
+
+        # Determine domain
+        if site is None:
+            if Site._meta.installed:
+                try:
+                    site = Site.objects.get_current()
+                except Site.DoesNotExist:
+                    pass
+            if site is None:
+                raise ImproperlyConfigured("To use sitemaps, either enable the sites framework or pass a "
+                                           "Site/RequestSite object in your view.")
+        domain = site.domain
+
         urls = []
         for item in self.paginator.page(page).object_list:
-            loc = "http://%s%s" % (current_site.domain, self.__get('location', item))
+            loc = "http://%s%s" % (domain, self.__get('location', item))
             url_info = {
                 'location': loc,
                 'lastmod': self.__get('lastmod', item, None),
@@ -297,6 +359,6 @@ class RelAlternateHreflangSitemap(Sitemap):
                 'priority': self.__get('priority', item, None),
                 'alternate_hreflangs': self._render_alternate_hreflangs(item),
             }
-            #print self._render_alternate_hreflangs(item)
+
             urls.append(url_info)
         return urls

@@ -23,6 +23,7 @@ class FooItem(models.Model):
     slug = models.SlugField(_("Slug"), unique=True)
     body = models.TextField(_("Body"))
     image = models.ImageField(_("Headline image"), blank=True, null=True, upload_to=_foo_images)
+    alternative_url = models.URLField(_("Alternative URL"), blank=True, null=True)
     date_published = models.DateTimeField(_("Date published"), blank=True, null=True, default=datetime.datetime.now())
     date_created = models.DateTimeField(_("Date created"), blank=True, null=True, auto_now_add=True, editable=False)
     date_updated = models.DateTimeField(_("Date updated"), blank=True, null=True, auto_now=True, editable=False)

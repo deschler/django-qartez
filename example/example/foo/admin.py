@@ -11,11 +11,11 @@ class FooItemAdmin(admin.ModelAdmin):
     list_display = ('title', 'date_published')
     prepopulated_fields = {'slug': ('title',)}
 
-    readonly_fields = ('date_created', 'date_updated', )
+    readonly_fields = ('date_created', 'date_updated',)
 
     fieldsets = (
         (None, {
-            'fields': ('title', 'slug', 'body', 'image')
+            'fields': ('title', 'slug', 'body', 'image', 'alternative_url')
         }),
         (_("Publication date"), {
             'classes': ('',),

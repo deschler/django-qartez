@@ -2,7 +2,7 @@ __all__ = ('foo_item_images_sitemap', 'foo_static_sitemap', 'FooItemSitemap')
 
 from django.contrib.sitemaps import Sitemap
 
-from qartez import ImagesSitemap, StaticSitemap
+from qartez import ImagesSitemap, StaticSitemap, RelAlternateHreflangSitemap
 
 from foo.models import FooItem
 
@@ -37,3 +37,13 @@ class FooItemSitemap(Sitemap):
 
     def items(self):
         return FooItem._default_manager.all()
+
+class FooItemAlternateHreflangSitemap(RelAlternateHreflangSitemap):
+    """
+    Alternative URL.
+    """
+    def alternate_hreflangs(self, item):
+        return [('en-us', item.alternative_url),]
+
+    def items(self):
+        return FooItem._default_manager.exclude(alternative_url=None)

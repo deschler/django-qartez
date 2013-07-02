@@ -134,7 +134,7 @@ foo/views.py
 >>>         item = FooItem._default_manager.get(slug=slug)
 >>>     except Exception, e:
 >>>         raise Http404
->>> 
+>>>
 >>>     context = {'item': item}
 >>>
 >>>     return render_to_response(template_name, context, context_instance=RequestContext(request))
@@ -198,3 +198,41 @@ For any issues contact me at the e-mail given in the `Author` section.
 Author
 ======================================================
 Artur Barseghyan <artur.barseghyan@gmail.com>
+
+Documentation
+=========================================
+:mod:`qartez` Package
+---------------------
+
+.. automodule:: qartez.__init__
+    :members:
+    :show-inheritance:
+
+:mod:`conf` Module
+------------------
+
+.. automodule:: qartez.conf
+    :members:
+    :show-inheritance:
+
+:mod:`settings` Module
+----------------------
+
+.. automodule:: qartez.settings
+    :members:
+    :show-inheritance:
+
+:mod:`views` Module
+-------------------
+
+.. automodule:: qartez.views
+    :members:
+    :show-inheritance:
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
