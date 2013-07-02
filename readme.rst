@@ -1,5 +1,5 @@
 django-qartez
-==============================================
+======================================================
 This app aims to provide better XML sitemaps. At the moment the following XML sitemaps are implemented:
 
     - qartez.ImagesSitemap: XML images sitemaps according to the specs
@@ -12,9 +12,9 @@ This app aims to provide better XML sitemaps. At the moment the following XML si
       the specs here http://support.google.com/webmasters/bin/answer.py?hl=en&answer=2620865
 
 Installation
-==============================================
+======================================================
 1. Install
-----------------------------------------------
+------------------------------------------------------
 Latest stable version on pypi:
 
     $ pip install django-qartez
@@ -24,7 +24,7 @@ Latest stable version from source:
     $ pip install -e hg+http://bitbucket.org/barseghyanartur/qartez@stable#egg=qartez
 
 2. Add 'qartez' to your ``INSTALLED_APPS``
-----------------------------------------------
+------------------------------------------------------
     >>> INSTALLED_APPS = (
     >>> # ...
     >>> 'django.contrib.sitemaps',
@@ -33,13 +33,13 @@ Latest stable version from source:
     >>> )
 
 Usage and examples
-==============================================
+======================================================
 We have an imaginary foo app.
 
-Usage example `qartez.ImagesSitemap`
-----------------------------------------------
+Usage example of `ImagesSitemap` and `StaticSitemap`
+------------------------------------------------------
 foo/sitemap.py
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>> from django.contrib.sitemaps import Sitemap
 >>>
 >>> from qartez import ImagesSitemap, StaticSitemap
@@ -80,7 +80,7 @@ foo/sitemap.py
 >>>
 
 foo/models.py
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>> from django.db import models
 >>> from django.utils.translation import ugettext_lazy as _
 >>> from django.core.urlresolvers import reverse
@@ -114,7 +114,7 @@ foo/models.py
 >>>         return reverse('foo.detail', kwargs=kwargs)
 
 foo/views.py
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>> from django.shortcuts import render_to_response
 >>> from django.template import RequestContext
 >>>
@@ -147,7 +147,7 @@ foo/views.py
 
 
 foo/urls.py
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>> from django.conf.urls import patterns, url
 >>>
 >>> urlpatterns = patterns('foo.views',
@@ -165,11 +165,11 @@ foo/urls.py
 >>> )
 
 qartez.RelAlternateHreflangSitemap
-----------------------------------------------
+------------------------------------------------------
 The RelAlternateHreflangSitemap behaves exactly like the django.contrib.sitemaps.Sitemap.
 
 # sitemaps.py
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >>> from qartez import RelAlternateHreflangSitemap
 >>>
 >>> class ArticleSitemap(RelAlternateHreflangSitemap):
@@ -177,13 +177,13 @@ The RelAlternateHreflangSitemap behaves exactly like the django.contrib.sitemaps
 >>>         return [('en-us', obj.alternative_object_url),]
 
 License
-===================================
+======================================================
 GPL 2.0/LGPL 2.1
 
 Support
-===================================
+======================================================
 For any issues contact me at the e-mail given in the `Author` section.
 
 Author
-===================================
+======================================================
 Artur Barseghyan <artur.barseghyan@gmail.com>
