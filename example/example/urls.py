@@ -1,7 +1,9 @@
 from django.conf.urls import patterns, include, url
 
-# Uncomment the next two lines to enable the admin:
+from django.conf import settings
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.static import static
 
 from foo.sitemap import foo_item_images_sitemap, foo_static_sitemap, FooItemSitemap, FooItemAlternateHreflangSitemap
 
@@ -32,3 +34,7 @@ urlpatterns = patterns('',
     (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
      {'sitemaps': sitemaps, 'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'}),
 )
+
+if settings.DEBUG:
+    urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
