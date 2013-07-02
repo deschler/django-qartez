@@ -1,11 +1,9 @@
 Django==1.5.1
-Jinja2==2.7
-MarkupSafe==0.18
-Pygments==1.6
-Sphinx==1.2b1
+Pillow==2.0.0
 argparse==1.2.1
 django-debug-toolbar==0.9.4
-docutils==0.10
-six==1.3.0
-wsgiref==0.1.2
 django-qartez==0.3
+ipdb==0.7
+ipython==0.13.2
+qartez==0.3
+wsgiref==0.1.2
