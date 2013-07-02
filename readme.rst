@@ -77,9 +77,13 @@ foo/sitemap.py
 >>>     def items(self):
 >>>         return FooItem._default_manager.all()
 >>>
+>>> # Alternate hreflang sitemap.
 >>> class ArticleSitemap(RelAlternateHreflangSitemap):
 >>>     def alternate_hreflangs(self, obj):
 >>>         return [('en-us', obj.alternative_object_url),]
+>>>
+>>>     def items(self):
+>>>         return FooItem._default_manager.all()
 
 foo/models.py
 ------------------------------------------------------
@@ -99,6 +103,7 @@ foo/models.py
 >>>     slug = models.SlugField(_("Slug"), unique=True)
 >>>     body = models.TextField(_("Body"))
 >>>     image = models.ImageField(_("Headline image"), blank=True, null=True, upload_to=_foo_images)
+>>>     alternative_url = models.URLField(_("Alternative URL"), blank=True, null=True)
 >>>     date_published = models.DateTimeField(_("Date published"), blank=True, null=True, \
 >>>                                           default=datetime.datetime.now())
 >>>     date_created = models.DateTimeField(_("Date created"), blank=True, null=True, auto_now_add=True, editable=False)
@@ -114,6 +119,10 @@ foo/models.py
 >>>     def get_absolute_url(self):
 >>>         kwargs = {'slug': self.slug}
 >>>         return reverse('foo.detail', kwargs=kwargs)
+>>>
+>>>     # Shortcut to full image URL for XML images sitemap.
+>>>     def image_url(self):
+>>>         return self.image.url if self.image else ''
 
 foo/views.py
 ------------------------------------------------------
@@ -122,6 +131,7 @@ foo/views.py
 >>>
 >>> from foo.models import FooItem
 >>>
+>>> # Listing
 >>> def browse(request, template_name='foo/browse.html'):
 >>>     queryset = FooItem._default_manager.all().order_by('-date_published')
 >>>
@@ -129,6 +139,7 @@ foo/views.py
 >>>
 >>>     return render_to_response(template_name, context, context_instance=RequestContext(request))
 >>>
+>>> # Detail
 >>> def detail(request, slug, template_name='foo/detail.html'):
 >>>     try:
 >>>         item = FooItem._default_manager.get(slug=slug)
@@ -139,10 +150,12 @@ foo/views.py
 >>>
 >>>     return render_to_response(template_name, context, context_instance=RequestContext(request))
 >>>
+>>> # Service welcome page
 >>> def welcome(request, template_name='foo/welcome.html'):
 >>>     context = {}
 >>>     return render_to_response(template_name, context, context_instance=RequestContext(request))
 >>>
+>>> # Service contact page
 >>> def contact(request, template_name='foo/contact.html'):
 >>>     context = {}
 >>>     return render_to_response(template_name, context, context_instance=RequestContext(request))
