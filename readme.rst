@@ -5,7 +5,7 @@ This app aims to provide better XML sitemaps. At the moment the following XML si
     - qartez.ImagesSitemap: XML images sitemaps according to the specs
       http://www.google.com/support/webmasters/bin/answer.py?answer=178636
 
-    - qartez.SimpleSitemap: Sitemap for service pages. Add named patterns or URLs to the sitemap to have it
+    - qartez.StaticSitemap: Sitemap for service pages. Add named patterns or URLs to the sitemap to have it
       nicely displayed in a separate service XML sitemap.
 
     - qartez.RelAlternateHreflangSitemap: Sitemaps: rel="alternate" hreflang="x" implementation. Read the specs
