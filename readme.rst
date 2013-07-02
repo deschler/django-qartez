@@ -35,6 +35,9 @@ Latest stable version from source:
 
 Usage and examples
 ======================================================
+Extensive example project is available at http://bitbucket.org/barseghyanartur/django-qartez/src (see the `example`
+directory).
+
 We have an imaginary foo app.
 
 foo/sitemap.py
@@ -45,7 +48,7 @@ foo/sitemap.py
 >>>
 >>> from foo.models import FooItem
 >>>
->>> # Dictionary to feed to the images sitemap
+>>> # Dictionary to feed to the images sitemap.
 >>> foo_item_images_info_dict = {
 >>>     'queryset': FooItem._default_manager.exclude(image=None), # Base queryset
 >>>     'image_location_field': 'image', # Image location
@@ -53,7 +56,7 @@ foo/sitemap.py
 >>>     'location_field': 'get_absolute_url' # An absolute URL of the page where image is shown
 >>> }
 >>>
->>> # Images sitemap
+>>> # XML images sitemap.
 >>> foo_item_images_sitemap = {
 >>>     'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
 >>> }
@@ -63,7 +66,7 @@ foo/sitemap.py
 >>> foo_static_sitemap.add_named_pattern('foo.welcome')
 >>> foo_static_sitemap.add_named_pattern('foo.contact')
 >>>
->>> # Foo items sitemap.
+>>> # Normal Foo items sitemap.
 >>> class FooItemSitemap(Sitemap):
 >>>     changefreq = "weekly"
 >>>     priority = 1.0
