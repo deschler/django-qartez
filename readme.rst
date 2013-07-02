@@ -1,4 +1,4 @@
-django-qartez Package
+django-qartez
 ==============================================
 This app aims to provide better XML sitemaps. At the moment the following XML sitemaps are implemented:
 - qartez.ImagesSitemap: XML images sitemaps according to the specs http://www.google.com/support/webmasters/bin/answer.py?answer=178636
