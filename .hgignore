@@ -1,0 +1,14 @@
+syntax: regexp
+\.pyc$
+\.hgignore~
+
+^example/db/
+^example/tmp/
+^example/static/
+^builddocs/
+^builddocs.zip
+^build/
+^dist/
+^src/django_qartez\.egg-info
+local_settings\.py
+MANIFEST\.in~
