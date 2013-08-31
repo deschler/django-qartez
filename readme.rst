@@ -96,8 +96,8 @@ foo/sitemap.py
 
 urls.py
 ------------------------------------------------------
->>> from foo.sitemap import foo_item_images_sitemap, foo_static_sitemap, FooItemSitemap
->>> from foo.sitemap import FooItemAlternateHreflangSitemap
+>>> from foo.sitemap import foo_item_images_sitemap, foo_static_sitemap
+>>> from foo.sitemap import FooItemAlternateHreflangSitemap, FooItemSitemap
 >>>
 >>> sitemaps = {
         'foo-items': FooItemSitemap,
