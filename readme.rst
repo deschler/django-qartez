@@ -116,12 +116,12 @@ urls.py
 Note, that it's necessary to add the 'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'
 only in case if you are going to use the ``qartez.RelAlternateHreflangSitemap``.
 
->>>     (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
-         {
-            'sitemaps': sitemaps,
-           'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'
-         }
-        ),
+>>> (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
+     {
+         'sitemaps': sitemaps,
+         'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'
+     }
+    ),
 
 In order to just get a better idea what kind of models and views are given in the example, see the code parts
 below.
