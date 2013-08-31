@@ -178,8 +178,8 @@ foo/urls.py
         # ...
         # Contact URL
         url(r'^contact/$', view='contact', name='foo.contact'),
-
->>>     # Welcome URL
+        # ...
+        # Welcome URL
         url(r'^welcome/$', view='welcome', name='foo.welcome'),
         # ...
     )
