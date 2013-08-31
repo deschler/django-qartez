@@ -27,11 +27,11 @@ Latest stable version from source:
 2. Add `qartez` to your ``INSTALLED_APPS``
 ------------------------------------------------------
     >>> INSTALLED_APPS = (
-    >>> # ...
-    >>> 'django.contrib.sitemaps',
-    >>> 'qartez',
-    >>> # ...
-    >>> )
+            # ...
+            'django.contrib.sitemaps',
+            'qartez',
+            # ...
+        )
 
 Usage and examples
 ======================================================
@@ -51,18 +51,18 @@ foo/sitemap.py
 >>> # ---------------------- XML images sitemap part ---------------------------
 >>> # Dictionary to feed to the images sitemap.
 >>> foo_item_images_info_dict = {
->>>     # Base queryset to iterate when procuding a site map
->>>     'queryset': FooItem._default_manager.exclude(image=None),
->>>     'image_location_field': 'image_url', # Image location (URL)
->>>     'image_title_field': 'title', # Image title
->>>     # An absolute URL of the page where image is shown
->>>     'location_field': 'get_absolute_url'
->>> }
+        # Base queryset to iterate when procuding a site map
+        'queryset': FooItem._default_manager.exclude(image=None),
+        'image_location_field': 'image_url', # Image location (URL)
+        'image_title_field': 'title', # Image title
+        # An absolute URL of the page where image is shown
+        'location_field': 'get_absolute_url'
+    }
 >>>
 >>> # XML images sitemap.
 >>> foo_item_images_sitemap = {
->>>     'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
->>> }
+        'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
+    }
 >>>
 >>> # ---------------------- Static sitemap part ---------------------------
 >>> # Sitemap for service pages like welcome and feedback.
@@ -100,28 +100,28 @@ urls.py
 >>> from foo.sitemap import FooItemAlternateHreflangSitemap
 >>>
 >>> sitemaps = {
->>>     'foo-items': FooItemSitemap,
->>>     'foo-items-alternate-hreflang': FooItemAlternateHreflangSitemap,
->>>     'foo-static': foo_static_sitemap
->>> }
+        'foo-items': FooItemSitemap,
+        'foo-items-alternate-hreflang': FooItemAlternateHreflangSitemap,
+        'foo-static': foo_static_sitemap
+    }
 >>>
 >>> urlpatterns = patterns('',
->>>     # Sitemaps
->>>     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index', \
+        # Sitemaps
+        (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index', \
          {'sitemaps': sitemaps}),
->>>     (r'^sitemap-foo-images\.xml$', 'qartez.views.render_images_sitemap', \
+        (r'^sitemap-foo-images\.xml$', 'qartez.views.render_images_sitemap', \
          {'sitemaps': foo_item_images_sitemap}),
->>>
->>>     # Note, that it's necessary to add the
->>>     # 'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml' only in case
->>>     # if you are going to use the ``qartez.RelAlternateHreflangSitemap``.
->>>     (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
+
+        # Note, that it's necessary to add the
+        # 'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml' only in case
+        # if you are going to use the ``qartez.RelAlternateHreflangSitemap``.
+        (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
          {
             'sitemaps': sitemaps,
             'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'
          }
         ),
->>> )
+    )
 
 In order to just get a better idea what kind of models and views are given in the example, see the code parts
 below.
@@ -175,14 +175,14 @@ foo/views.py
 foo/urls.py
 ------------------------------------------------------
 >>> urlpatterns = patterns('foo.views',
->>>     # ...
->>>     # Contact URL
->>>     url(r'^contact/$', view='contact', name='foo.contact'),
->>>
->>>     # Welcome URL
->>>     url(r'^welcome/$', view='welcome', name='foo.welcome'),
->>>     # ...
->>> )
+        # ...
+        # Contact URL
+        url(r'^contact/$', view='contact', name='foo.contact'),
+
+        # Welcome URL
+        url(r'^welcome/$', view='welcome', name='foo.welcome'),
+        # ...
+    )
 
 License
 ======================================================
