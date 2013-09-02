@@ -26,12 +26,12 @@ Latest stable version from source:
 
 2. Add `qartez` to your ``INSTALLED_APPS``
 ------------------------------------------------------
-    >>> INSTALLED_APPS = (
-            # ...
-            'django.contrib.sitemaps',
-            'qartez',
-            # ...
-        )
+>>> INSTALLED_APPS = (
+>>>     # ...
+>>>     'django.contrib.sitemaps',
+>>>     'qartez',
+>>>     # ...
+>>> )
 
 Usage and examples
 ======================================================
@@ -51,18 +51,18 @@ foo/sitemap.py
 >>> # ---------------------- XML images sitemap part ---------------------------
 >>> # Dictionary to feed to the images sitemap.
 >>> foo_item_images_info_dict = {
-        # Base queryset to iterate when procuding a site map
-        'queryset': FooItem._default_manager.exclude(image=None),
-        'image_location_field': 'image_url', # Image location (URL)
-        'image_title_field': 'title', # Image title
-        # An absolute URL of the page where image is shown
-        'location_field': 'get_absolute_url'
-    }
+>>>     # Base queryset to iterate when procuding a site map
+>>>     'queryset': FooItem._default_manager.exclude(image=None),
+>>>     'image_location_field': 'image_url', # Image location (URL)
+>>>     'image_title_field': 'title', # Image title
+>>>     # An absolute URL of the page where image is shown
+>>>     'location_field': 'get_absolute_url'
+>>> }
 >>>
 >>> # XML images sitemap.
 >>> foo_item_images_sitemap = {
-        'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
-    }
+>>>     'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
+>>> }
 >>>
 >>> # ---------------------- Static sitemap part ---------------------------
 >>> # Sitemap for service pages like welcome and feedback.
@@ -88,6 +88,9 @@ foo/sitemap.py
 >>> # ---------------------- Alternate hreflang sitemap part ---------------
 >>> # Alternate hreflang sitemap.
 >>> class ArticleSitemap(RelAlternateHreflangSitemap):
+>>>     # If you want to serve the links on HTTPS.
+>>>     protocol = 'https'
+>>>
 >>>     def alternate_hreflangs(self, obj):
 >>>         return [('en-us', obj.alternative_object_url),]
 >>>
@@ -100,28 +103,29 @@ urls.py
 >>> from foo.sitemap import FooItemAlternateHreflangSitemap, FooItemSitemap
 >>>
 >>> sitemaps = {
-        'foo-items': FooItemSitemap,
-        'foo-items-alternate-hreflang': FooItemAlternateHreflangSitemap,
-        'foo-static': foo_static_sitemap
-    }
+>>>     'foo-items': FooItemSitemap,
+>>>     'foo-items-alternate-hreflang': FooItemAlternateHreflangSitemap,
+>>>     'foo-static': foo_static_sitemap
+>>> }
 >>>
 >>> urlpatterns = patterns('',
-        # Sitemaps
-        (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index', \
-         {'sitemaps': sitemaps}),
-        (r'^sitemap-foo-images\.xml$', 'qartez.views.render_images_sitemap', \
-         {'sitemaps': foo_item_images_sitemap}),
-    )
+>>>     # Sitemaps
+>>>     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index', \
+>>>      {'sitemaps': sitemaps}),
+>>>
+>>>     (r'^sitemap-foo-images\.xml$', 'qartez.views.render_images_sitemap', \
+>>>      {'sitemaps': foo_item_images_sitemap}),
+>>> )
 
 Note, that it's necessary to add the 'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'
 only in case if you are going to use the ``qartez.RelAlternateHreflangSitemap``.
 
 >>> (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
-     {
-         'sitemaps': sitemaps,
-         'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'
-     }
-    ),
+>>>  {
+>>>     'sitemaps': sitemaps,
+>>>     'template_name': 'qartez/rel_alternate_hreflang_sitemap.xml'
+>>>  }
+>>> ),
 
 In order to just get a better idea what kind of models and views are given in the example, see the code parts
 below.
@@ -133,12 +137,12 @@ foo/models.py
 >>>     slug = models.SlugField(_("Slug"), unique=True)
 >>>     body = models.TextField(_("Body"))
 >>>     date_published = models.DateTimeField(_("Date published"), blank=True, \
-                                              null=True, \
-                                              default=datetime.datetime.now())
+>>>                                           null=True, \
+>>>                                           default=datetime.datetime.now())
 >>>
 >>>     # Image to be used for XML images sitemap.
 >>>     image = models.ImageField(_("Headline image"), blank=True, null=True, \
-                                  upload_to='foo-images')
+>>>                               upload_to='foo-images')
 >>>
 >>>     # URL to be used for alternative hreflang attribute.
 >>>     alternative_url = models.URLField(_("Alternative URL"), blank=True, null=True)
@@ -164,25 +168,25 @@ foo/views.py
 >>> def welcome(request, template_name='foo/welcome.html'):
 >>>     context = {}
 >>>     return render_to_response(template_name, context, \
-                                  context_instance=RequestContext(request))
+>>>                               context_instance=RequestContext(request))
 >>>
 >>> # Service contact page
 >>> def contact(request, template_name='foo/contact.html'):
 >>>     context = {}
 >>>     return render_to_response(template_name, context, \
-                                  context_instance=RequestContext(request))
+>>>                               context_instance=RequestContext(request))
 
 foo/urls.py
 ------------------------------------------------------
 >>> urlpatterns = patterns('foo.views',
-        # ...
-        # Contact URL
-        url(r'^contact/$', view='contact', name='foo.contact'),
-        # ...
-        # Welcome URL
-        url(r'^welcome/$', view='welcome', name='foo.welcome'),
-        # ...
-    )
+>>>     # ...
+>>>     # Contact URL
+>>>     url(r'^contact/$', view='contact', name='foo.contact'),
+>>>     # ...
+>>>     # Welcome URL
+>>>     url(r'^welcome/$', view='welcome', name='foo.welcome'),
+>>>     # ...
+>>> )
 
 License
 ======================================================
