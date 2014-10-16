@@ -36,4 +36,7 @@ def render_images_sitemap(request, sitemaps, section=None, template_name='qartez
         except PageNotAnInteger:
             raise Http404("No page '%s'" % page)
     xml = smart_str(loader.render_to_string(template_name, {'urlset': urls, 'request': request}))
-    return HttpResponse(xml, mimetype='application/xml')
+    try:
+        return HttpResponse(xml, mimetype='application/xml')
+    except TypeError:
+        return HttpResponse(xml, content_type='application/xml')
