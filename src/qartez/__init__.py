@@ -1,4 +1,4 @@
-__title__ = 'qartez.__init__'
+__title__ = 'django-qartez'
 __version__ = '0.6'
 __build__ = 0x000006
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
@@ -38,7 +38,8 @@ class ImagesSitemap(GenericSitemap):
     >>> }
     >>>
     >>> foo_item_images_sitemap = {
-    >>>     'foo_item_images': ImagesSitemap(foo_item_images_info_dict, priority=0.6),
+    >>>     'foo_item_images': ImagesSitemap(foo_item_images_info_dict, \
+    >>>                                      priority=0.6),
     >>> }
     """
     def __init__(self, info_dict, priority=None, changefreq=None):
@@ -373,12 +374,11 @@ class RelAlternateHreflangSitemap(Sitemap):
         :return str:
         """
         alternate_hreflangs = self.__get('alternate_hreflangs', item, [])
-        output = u""
+        output = ""
         if alternate_hreflangs:
             for hreflang in alternate_hreflangs:
-                # TODO?
                 output += REL_ALTERNATE_HREFLANG_SITEMAP_TEMPLATE.format(
-                    {'lang': hreflang[0], 'href': hreflang[1]}
+                    **{'lang': hreflang[0], 'href': hreflang[1]}
                     )
         return output
 
@@ -405,7 +405,9 @@ class RelAlternateHreflangSitemap(Sitemap):
 
         urls = []
         for item in self.paginator.page(page).object_list:
-            loc = "%s://%s%s" % (protocol, domain, self.__get('location', item))
+            loc = "{0}://{1}{2}".format(
+                protocol, domain, self.__get('location', item)
+                )
             url_info = {
                 'location': loc,
                 'lastmod': self.__get('lastmod', item, None),
